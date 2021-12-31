@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>
+    <div>
+      <div>Count: <span class="red-value count">0</span></div>
+
+      <div>
+        <button class="red-button" id="increase-count">Increase Count</button>
+        <button class="red-button" id="decrease-count">Decrease Count</button>
+      </div>
+
+      <input class="red-input" id="name" type="text" />
+      <p>Capitalized name: <span class="red-value name"></span></p>
+    </div>
+
+    <!-- IGNORE EVERYTHING BELOW HERE -->
+    <script>
+      window.invoke = function (event, id, value) {
+        var s = JSON.stringify({ event: event, id: id, value: value });
+        if (window.external !== undefined) {
+          return window.external.invoke(s);
+        } else if (window.webkit.messageHandlers.external !== undefined) {
+          return window.webkit.messageHandlers.external.postMessage(s);
+        }
+        throw new Error("no external handler");
+      };
+
+      var inputs = document.getElementsByClassName("red-input");
+      for (var i = 0; i < inputs.length; i++) {
+        inputs[i].addEventListener("input", function (e) {
+          invoke("Input", e.target.id, e.target.value);
+        });
+      }
+
+      var buttons = document.getElementsByClassName("red-button");
+      for (var i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener("click", function (e) {
+          invoke("Button", e.target.id);
+        });
+      }
+    </script>
+  </body>
+</html>
